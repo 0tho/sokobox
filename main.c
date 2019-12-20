@@ -6,9 +6,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+#if !(defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
+	#include <termios.h>
+#endif
 
 typedef struct {
   int x, y;
@@ -57,6 +60,7 @@ void limpaTela () {
   system(CLEAR);
 }
 
+#if !(defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
 static struct termios old, current;
 
 void initTermios () {
@@ -121,10 +125,12 @@ char getch () {
   free(buff);
   return ch;
 }
-
+#endif
 // No main sera rodado o jogo inteiro
 int main (int argc, char *argv[]) {
+  #if !(defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
   initTermios();
+  #endif
   // declaração de variaveis que serão usados durante o jogo
   // variaveis de controle do menu
   int estado = 0;
@@ -596,7 +602,9 @@ int main (int argc, char *argv[]) {
     }
   }
 
+#if !(defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
   resetTermios();
+#endif
   limpaTela(); 
   return 0;
 }
